@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 //Класс для инициализации базы данных путем заполнения ее таблиц тестовым набором записей
-namespace Fuels.Models
+namespace EFCore_LINQ.Models
 {
     public static class DbInitializer
     {
-        public static void Initialize(FuelsContext db)
+        public static void Initialize(FuelContext db)
         {
             db.Database.EnsureCreated();
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Fuels.Models
+namespace EFCore_LINQ.Models
 {
     public class Fuel
     {

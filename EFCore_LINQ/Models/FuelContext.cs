@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Fuels.Models
+namespace EFCore_LINQ.Models
 {
-    public class FuelsContext: DbContext
+    public class FuelContext: DbContext
     {
-        public FuelsContext(DbContextOptions<FuelsContext> options): base(options)
+        public FuelContext(DbContextOptions<FuelContext> options): base(options)
         {
         }
         public DbSet<Fuel> Fuels { get; set; }

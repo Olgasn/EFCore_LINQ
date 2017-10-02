@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Fuels.Models
+namespace EFCore_LINQ.Models
 {
     public class Operation
     {
