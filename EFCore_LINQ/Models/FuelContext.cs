@@ -1,14 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace EFCore_LINQ.Models
 {
     public class FuelContext: DbContext
     {
-        public FuelContext(DbContextOptions<FuelContext> options): base(options)
-        {
-        }
+
         public DbSet<Fuel> Fuels { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<Tank> Tanks { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var builder = new ConfigurationBuilder();
+            // установка пути к текущему каталогу
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            // получаем конфигурацию из файла appsettings.json
+            builder.AddJsonFile("appsettings.json");
+            // создаем конфигурацию
+            var config = builder.Build();
+            // получаем строку подключения
+            string connectionString = config.GetConnectionString("DefaultConnection");
+
+            var options = optionsBuilder
+                .UseSqlServer(connectionString)
+                .Options;
+
+
+        }
     }
 }
