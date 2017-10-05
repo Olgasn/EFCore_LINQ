@@ -114,7 +114,6 @@ namespace EFCore_LINQ
             //.Join(db.Fuels, f => f.FuelID, t => t.FuelID, (f, t) => new { f.OperationID, t.FuelType, f.Inc_Exp, f.Date.Value.Month });
 
             string comment = "1. Результат выполнения запроса на выборку отсортированных записей из двух таблиц, удовлетворяющих заданному условию : \r\n";
-            comment += queryLINQ1.ToString();
             //для наглядности выводим не более 5 записей
             Print(comment, queryLINQ1.Take(5).ToList());
 
@@ -138,7 +137,6 @@ namespace EFCore_LINQ
             //     );
 
             comment = "2. Результат выполнения запроса на выборку сгруппированных записей из одной таблицы, удовлетворяющих заданному условию, с выполнением групповой операции суммирования : \r\n";
-            comment += queryLINQ2.ToString();
             //для наглядности выводим не более 5 записей
             Print(comment, queryLINQ2.Take(5).ToList());
 
@@ -154,7 +152,6 @@ namespace EFCore_LINQ
                              };
 
             comment = "3. Результат выполнения запроса на выборку записей из одной таблицы с выводом определенных полей: \r\n";
-            comment += queryLINQ3.ToString();
             //для наглядности выводим не более 5 записей
             Print(comment, queryLINQ3.Take(5).ToList());
         }
