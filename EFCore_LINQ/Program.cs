@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 using EFCore_LINQ.Models;
 using System.Collections;
 
