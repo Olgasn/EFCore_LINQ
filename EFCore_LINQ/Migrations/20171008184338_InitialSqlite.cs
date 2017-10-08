@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
-using System.Collections.Generic;
 
 namespace EFCore_LINQ.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialSqlite : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,10 +11,10 @@ namespace EFCore_LINQ.Migrations
                 name: "Fuels",
                 columns: table => new
                 {
-                    FuelID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FuelDensity = table.Column<float>(type: "real", nullable: false),
-                    FuelType = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    FuelID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FuelDensity = table.Column<float>(type: "REAL", nullable: false),
+                    FuelType = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,13 +25,13 @@ namespace EFCore_LINQ.Migrations
                 name: "Tanks",
                 columns: table => new
                 {
-                    TankID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    TankMaterial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TankPicture = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TankType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TankVolume = table.Column<float>(type: "real", nullable: false),
-                    TankWeight = table.Column<float>(type: "real", nullable: false)
+                    TankID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TankMaterial = table.Column<string>(type: "TEXT", nullable: true),
+                    TankPicture = table.Column<string>(type: "TEXT", nullable: true),
+                    TankType = table.Column<string>(type: "TEXT", nullable: true),
+                    TankVolume = table.Column<float>(type: "REAL", nullable: false),
+                    TankWeight = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,12 +42,12 @@ namespace EFCore_LINQ.Migrations
                 name: "Operations",
                 columns: table => new
                 {
-                    OperationID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FuelID = table.Column<int>(type: "int", nullable: true),
-                    Inc_Exp = table.Column<float>(type: "real", nullable: true),
-                    TankID = table.Column<int>(type: "int", nullable: true)
+                    OperationID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    FuelID = table.Column<int>(type: "INTEGER", nullable: true),
+                    Inc_Exp = table.Column<float>(type: "REAL", nullable: true),
+                    TankID = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {

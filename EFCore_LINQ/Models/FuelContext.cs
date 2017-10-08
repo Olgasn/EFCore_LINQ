@@ -20,10 +20,12 @@ namespace EFCore_LINQ.Models
             // создаем конфигурацию
             var config = builder.Build();
             // получаем строку подключения
-            string connectionString = config.GetConnectionString("DefaultConnection");
+            //string connectionString = config.GetConnectionString("SqliteConnection");
+            string connectionString = config.GetConnectionString("SQLConnection");
 
             var options = optionsBuilder
                 .UseSqlServer(connectionString)
+                //.UseSqlite(connectionString)
                 .Options;
 
 

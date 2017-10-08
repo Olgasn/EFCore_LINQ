@@ -11,15 +11,14 @@ using System;
 namespace EFCore_LINQ.Migrations
 {
     [DbContext(typeof(FuelContext))]
-    [Migration("20171003180510_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20171008184338_InitialSqlite")]
+    partial class InitialSqlite
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
             modelBuilder.Entity("EFCore_LINQ.Models.Fuel", b =>
                 {
