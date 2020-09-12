@@ -1,7 +1,8 @@
-﻿using System;
+﻿using EFCore_LINQ.Models;
+using System;
 using System.Linq;
 //Класс для инициализации базы данных путем заполнения ее таблиц тестовым набором записей
-namespace EFCore_LINQ.Models
+namespace EFCore_LINQ.Data
 {
     public static class DbInitializer
     {
@@ -12,7 +13,8 @@ namespace EFCore_LINQ.Models
             // Проверка занесены ли виды топлива
             if (db.Fuels.Any())
             {
-                return;   // База данных инициализирована
+                Console.WriteLine("====== База данных уже инициализирована ========");
+                return;   // База данных уже инициализирована
             }
 
             int tanks_number = 35;
@@ -67,10 +69,13 @@ namespace EFCore_LINQ.Models
             }
             //сохранение изменений в базу данных, связанную с объектом контекста
             db.SaveChanges();
+
+            Console.WriteLine("====== База данных инициализирована ========");
+
         }
 
     }
 
 }
-    
+
 

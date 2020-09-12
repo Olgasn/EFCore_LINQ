@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore_LINQ.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace EFCore_LINQ.Models
+namespace EFCore_LINQ.Data
 {
-    public class FuelContext: DbContext
+    public class FuelContext : DbContext
     {
 
         public DbSet<Fuel> Fuels { get; set; }

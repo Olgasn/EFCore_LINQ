@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore_LINQ", "EFCore_LINQ\EFCore_LINQ.csproj", "{E6075B8F-BF1D-4DC9-9259-BEB9363F8C65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore_LINQ", "EFCore_LINQ\EFCore_LINQ.csproj", "{E6075B8F-BF1D-4DC9-9259-BEB9363F8C65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

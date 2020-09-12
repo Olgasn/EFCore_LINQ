@@ -1,8 +1,9 @@
-﻿using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using EFCore_LINQ.Data;
 using EFCore_LINQ.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections;
+using System.Linq;
 
 namespace EFCore_LINQ
 {
@@ -10,7 +11,7 @@ namespace EFCore_LINQ
     {
         public static void Main(string[] args)
         {
-    
+
 
             using (FuelContext db = new FuelContext())
             {
@@ -40,6 +41,7 @@ namespace EFCore_LINQ
         }
 
         static void Print(string sqltext, IEnumerable items)
+        // Вывод на консоль
         {
             Console.WriteLine(sqltext);
             Console.WriteLine("Записи: ");
@@ -96,7 +98,7 @@ namespace EFCore_LINQ
             var queryLINQ1 = from f in db.Operations
                              join t in db.Fuels
                              on f.FuelID equals t.FuelID
-                             where (f.Inc_Exp > 0 && f.Date.Year == 2016)
+                             where (f.Inc_Exp > 0 && f.Date.Year == DateTime.Now.Year)
                              orderby f.FuelID descending
                              select new
                              {
@@ -107,7 +109,7 @@ namespace EFCore_LINQ
                              };
 
             //то же, используя методы расширений
-            //var queryLINQ1 = db.Operations.Where(f => (f.Inc_Exp > 0 && f.Date.Value.Year == 2016))
+            //var queryLINQ1 = db.Operations.Where(f => (f.Inc_Exp > 0 && f.Date.Value.Year == DateTime.Now.Year))
             //.OrderBy(f => f.FuelID)
             //.Join(db.Fuels, f => f.FuelID, t => t.FuelID, (f, t) => new { f.OperationID, t.FuelType, f.Inc_Exp, f.Date.Value.Month });
 
@@ -117,7 +119,7 @@ namespace EFCore_LINQ
 
             // Определение LINQ запроса 2 
             var queryLINQ2 = from o in db.Operations
-                             where (o.Inc_Exp > 0 && o.Date.Year == 2016)
+                             where (o.Inc_Exp > 0 && o.Date.Year == DateTime.Now.Year)
                              group o.Inc_Exp by o.FuelID into gr
                              select new
                              {
@@ -125,7 +127,7 @@ namespace EFCore_LINQ
                                  Количество_топлива = gr.Sum()
                              };
             //то же, используя методы расширений:
-            //var queryLINQ2 = db.Operations.Where(o => ((o.Inc_Exp > (Single?)0) && (o.Date.Value.Year == 2016)))
+            //var queryLINQ2 = db.Operations.Where(o => ((o.Inc_Exp > (Single?)0) && (o.Date.Value.Year == DateTime.Now.Year)))
             //    .GroupBy(o => o.FuelID, o => o.Inc_Exp)
             //    .Select(gr => new
             //    {
