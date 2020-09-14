@@ -37,7 +37,6 @@ namespace EFCore_LINQ
                 Select(db);
 
             }
-            Console.Read();
         }
 
         static void Print(string sqltext, IEnumerable items)
@@ -160,15 +159,15 @@ namespace EFCore_LINQ
         {
             //подлежащие удалению записи в таблице Tanks
             string nametank = "Бочка1";
-            var tank = db.Tanks.Where(c => c.TankType == nametank);
+            IQueryable<Tank> tank = db.Tanks.Where(c => c.TankType == nametank);
 
             //подлежащие удалению записи в таблице Fuels
             string namefuel = "Нитроглицерин1";
-            var fuel = db.Fuels
+            IQueryable<Fuel> fuel = db.Fuels
                 .Where(c => c.FuelType == namefuel);
 
             //подлежащие удалению записи в связанной таблице Operations
-            var someOperations = db.Operations
+            IQueryable<Operation> someOperations = db.Operations
                 .Include("Tank")
                 .Include("Fuel")
                 .Where(o => ((o.Tank.TankType == nametank)) && (o.Fuel.FuelType == namefuel));
@@ -190,7 +189,7 @@ namespace EFCore_LINQ
         {
             //подлежащие обновлению записи в таблице Tanks
             string nametank = "Бочка";
-            var tank = db.Tanks.Where(c => c.TankType == nametank).FirstOrDefault();
+            Tank tank = db.Tanks.Where(c => c.TankType == nametank).FirstOrDefault();
             //обновление
             if (tank != null)
             {
@@ -200,7 +199,7 @@ namespace EFCore_LINQ
 
             //подлежащие обновлению записи в таблице Fuels
             string namefuel = "Нитроглицерин";
-            var fuel = db.Fuels.Where(c => c.FuelType == namefuel).FirstOrDefault();
+            Fuel fuel = db.Fuels.Where(c => c.FuelType == namefuel).FirstOrDefault();
             //обновление
             if (fuel != null)
             {
@@ -208,7 +207,7 @@ namespace EFCore_LINQ
             };
 
             //подлежащие обновлению записи в связанной таблице Operations
-            var someOperations = db.Operations.Include("Tank").Include("Fuel")
+            IQueryable<Operation> someOperations = db.Operations.Include("Tank").Include("Fuel")
                 .Where(o => ((o.Tank.TankType == nametank)) && (o.Fuel.FuelType == namefuel));
             //обновление
             if (someOperations != null)
