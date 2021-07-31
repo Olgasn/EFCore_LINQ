@@ -19,22 +19,22 @@ namespace EFCore_LINQ
                 //Выполняем разные методы, содержащие операции выборки и изменения данных
                 Console.WriteLine("====== Будет выполнена выборка данных (нажмите любую клавишу) ========");
                 Console.ReadKey();
-                Select(db);
+                Select(db,5);
                 Console.WriteLine("====== Будет выполнена вставка данных (нажмите любую клавишу) ========");
                 Console.ReadKey();
                 Insert(db);
                 Console.WriteLine("====== Выборка после вставки ========");
-                Select(db);
+                Select(db,5);
                 Console.WriteLine("====== Будет выполнено обновление данных (нажмите любую клавишу) ========");
                 Console.ReadKey();
                 Update(db);
                 Console.WriteLine("====== Выборка после обновления ========");
-                Select(db);
+                Select(db,5);
                 Console.WriteLine("====== Будет выполнено удаление данных (нажмите любую клавишу) ========");
                 Console.ReadKey();
                 Delete(db);
                 Console.WriteLine("====== Выборка после удаления ========");
-                Select(db);
+                Select(db,5);
 
             }
         }
@@ -90,7 +90,7 @@ namespace EFCore_LINQ
             db.SaveChanges();
 
         }
-        static void Select(FuelContext db)
+        static void Select(FuelContext db, int recordsNumber)
         {
 
             // Определение LINQ запроса 1
@@ -113,8 +113,8 @@ namespace EFCore_LINQ
             //.Join(db.Fuels, f => f.FuelID, t => t.FuelID, (f, t) => new { f.OperationID, t.FuelType, f.Inc_Exp, f.Date.Value.Month });
 
             string comment = "1. Результат выполнения запроса на выборку отсортированных записей из двух таблиц, удовлетворяющих заданному условию : \r\n";
-            //для наглядности выводим не более 5 записей
-            Print(comment, queryLINQ1.Take(5).ToList());
+            //для наглядности выводим не более recordsNumber записей
+            Print(comment, queryLINQ1.Take(recordsNumber).ToList());
 
             // Определение LINQ запроса 2 
             var queryLINQ2 = from o in db.Operations
@@ -136,8 +136,8 @@ namespace EFCore_LINQ
             //     );
 
             comment = "2. Результат выполнения запроса на выборку сгруппированных записей из одной таблицы, удовлетворяющих заданному условию, с выполнением групповой операции суммирования : \r\n";
-            //для наглядности выводим не более 5 записей
-            Print(comment, queryLINQ2.Take(5).ToList());
+            //для наглядности выводим не более recordsNumber записей
+            Print(comment, queryLINQ2.Take(recordsNumber).ToList());
 
             // Определение LINQ запроса 3
             var queryLINQ3 = from t in db.Tanks
@@ -151,8 +151,8 @@ namespace EFCore_LINQ
                              };
 
             comment = "3. Результат выполнения запроса на выборку записей из одной таблицы с выводом определенных полей: \r\n";
-            //для наглядности выводим не более 5 записей
-            Print(comment, queryLINQ3.Take(5).ToList());
+            //для наглядности выводим не более recordsNumber записей
+            Print(comment, queryLINQ3.Take(recordsNumber).ToList());
         }
 
         static void Delete(FuelContext db)

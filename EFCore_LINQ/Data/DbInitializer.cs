@@ -26,7 +26,8 @@ namespace EFCore_LINQ.Data
             float tankVolume;
             string fuelType;
             float fuelDensity;
-
+            int tankId;
+            int fuelId;
             Random randObj = new Random(1);
 
             //Заполнение таблицы емкостей
@@ -58,14 +59,15 @@ namespace EFCore_LINQ.Data
             db.SaveChanges();
 
             //Заполнение таблицы операций
+
             for (int operationID = 1; operationID <= operations_number; operationID++)
             {
-                int tankID = randObj.Next(1, tanks_number - 1);
-                int fuelID = randObj.Next(1, fuels_number - 1);
+                tankId = randObj.Next(1, tanks_number - 1);
+                fuelId = randObj.Next(1, fuels_number - 1);
                 int inc_exp = randObj.Next(200) - 100;
                 DateTime today = DateTime.Now.Date;
                 DateTime operationdate = today.AddDays(-operationID);
-                db.Operations.Add(new Operation { TankID = tankID, FuelID = fuelID, Inc_Exp = inc_exp, Date = operationdate });
+                db.Operations.Add(new Operation { TankID = tankId, FuelID = fuelId, Inc_Exp = inc_exp, Date = operationdate });
             }
             //сохранение изменений в базу данных, связанную с объектом контекста
             db.SaveChanges();
