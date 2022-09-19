@@ -14,9 +14,9 @@ namespace EFCore_LINQ.Models
         //Дата операции
         public DateTime Date { get; set; }
         //ссылка на виды топлива
-        public virtual Fuel Fuel { get; set; }
+        public Fuel Fuel { get; set; }
         //ссылка на емкости
-        public virtual Tank Tank { get; set; }
+        public Tank Tank { get; set; }
 
     }
 }

@@ -212,7 +212,7 @@ namespace EFCore_LINQ
             //обновление
             if (someOperations != null)
             {
-                foreach (var op in someOperations)
+                foreach (Operation op in someOperations)
                 {
                     op.Inc_Exp = 0;
                 };

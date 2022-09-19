@@ -16,7 +16,7 @@ namespace EFCore_LINQ.Models
         public string TankMaterial { get; set; }
         //ссылка на файл изображения емкости
         public string TankPicture { get; set; }
-        public virtual ICollection<Operation> Operations { get; set; }
+        public ICollection<Operation> Operations { get; set; }
 
     }
 }

@@ -13,7 +13,7 @@ namespace EFCore_LINQ.Data
         public DbSet<Tank> Tanks { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            ConfigurationBuilder builder = new ConfigurationBuilder();
+            ConfigurationBuilder builder = new();
             // установка пути к текущему каталогу
             builder.SetBasePath(Directory.GetCurrentDirectory());
             // получаем конфигурацию из файла appsettings.json
@@ -23,11 +23,11 @@ namespace EFCore_LINQ.Data
             // получаем строку подключения
             //string connectionString = config.GetConnectionString("SqliteConnection");
             string connectionString = config.GetConnectionString("SQLConnection");
-
-            DbContextOptions options = optionsBuilder
+            _ = optionsBuilder
                 .UseSqlServer(connectionString)
                 //.UseSqlite(connectionString)
                 .Options;
+            optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message));
 
 
         }
