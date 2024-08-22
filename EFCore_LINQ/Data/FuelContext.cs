@@ -1,4 +1,5 @@
 ﻿using EFCore_LINQ.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
@@ -14,15 +15,29 @@ namespace EFCore_LINQ.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             ConfigurationBuilder builder = new();
+
             // установка пути к текущему каталогу
             builder.SetBasePath(Directory.GetCurrentDirectory());
             // получаем конфигурацию из файла appsettings.json
             builder.AddJsonFile("appsettings.json");
             // создаем конфигурацию
-            IConfigurationRoot config = builder.Build();
+            IConfigurationRoot configuration = builder.AddUserSecrets<Program>().Build();
+
             // получаем строку подключения
+
+            //Вариант для Sqlite
             //string connectionString = config.GetConnectionString("SqliteConnection");
-            string connectionString = config.GetConnectionString("SQLConnection");
+
+            //Вариант для SQL Server
+            //Считываем пароль из secrets.json
+            string secretKey = configuration["Database:password"];
+            SqlConnectionStringBuilder sqlConnectionStringBuilder = new(configuration.GetConnectionString("SQLConnection"))
+            {
+                Password = secretKey
+            };
+            string connectionString = sqlConnectionStringBuilder.ConnectionString;
+
+
             _ = optionsBuilder
                 .UseSqlServer(connectionString)
                 //.UseSqlite(connectionString)

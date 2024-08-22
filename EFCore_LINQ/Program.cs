@@ -9,34 +9,31 @@ namespace EFCore_LINQ
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
 
 
-            using (FuelContext db = new FuelContext())
-            {
-                DbInitializer.Initialize(db);
-                //Выполняем разные методы, содержащие операции выборки и изменения данных
-                Console.WriteLine("====== Будет выполнена выборка данных (нажмите любую клавишу) ========");
-                Console.ReadKey();
-                Select(db,5);
-                Console.WriteLine("====== Будет выполнена вставка данных (нажмите любую клавишу) ========");
-                Console.ReadKey();
-                Insert(db);
-                Console.WriteLine("====== Выборка после вставки ========");
-                Select(db,5);
-                Console.WriteLine("====== Будет выполнено обновление данных (нажмите любую клавишу) ========");
-                Console.ReadKey();
-                Update(db);
-                Console.WriteLine("====== Выборка после обновления ========");
-                Select(db,5);
-                Console.WriteLine("====== Будет выполнено удаление данных (нажмите любую клавишу) ========");
-                Console.ReadKey();
-                Delete(db);
-                Console.WriteLine("====== Выборка после удаления ========");
-                Select(db,5);
-
-            }
+            using FuelContext db = new();
+            DbInitializer.Initialize(db);
+            //Выполняем разные методы, содержащие операции выборки и изменения данных
+            Console.WriteLine("====== Будет выполнена выборка данных (нажмите любую клавишу) ========");
+            Console.ReadKey();
+            Select(db, 5);
+            Console.WriteLine("====== Будет выполнена вставка данных (нажмите любую клавишу) ========");
+            Console.ReadKey();
+            Insert(db);
+            Console.WriteLine("====== Выборка после вставки ========");
+            Select(db, 5);
+            Console.WriteLine("====== Будет выполнено обновление данных (нажмите любую клавишу) ========");
+            Console.ReadKey();
+            Update(db);
+            Console.WriteLine("====== Выборка после обновления ========");
+            Select(db, 5);
+            Console.WriteLine("====== Будет выполнено удаление данных (нажмите любую клавишу) ========");
+            Console.ReadKey();
+            Delete(db);
+            Console.WriteLine("====== Выборка после удаления ========");
+            Select(db, 5);
         }
 
         static void Print(string sqltext, IEnumerable items)
@@ -55,7 +52,7 @@ namespace EFCore_LINQ
         static void Insert(FuelContext db)
         {
             // Создать новую емкость
-            Tank tank = new Tank
+            Tank tank = new()
             {
                 TankType = "Бочка",
                 TankMaterial = "Дерево",
@@ -63,7 +60,7 @@ namespace EFCore_LINQ
                 TankWeight = 100
             };
             // Создать новый вид топлива
-            Fuel fuel = new Fuel
+            Fuel fuel = new()
             {
                 FuelType = "Нитроглицерин",
                 FuelDensity = 3
@@ -76,7 +73,7 @@ namespace EFCore_LINQ
             db.SaveChanges();
 
             // Создать новую операцию
-            Operation operation = new Operation
+            Operation operation = new()
             {
                 TankID = tank.TankID,
                 FuelID = fuel.FuelID,
