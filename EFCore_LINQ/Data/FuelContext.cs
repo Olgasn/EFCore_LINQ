@@ -26,13 +26,13 @@ namespace EFCore_LINQ.Data
             /// Получаем строку подключения
             string connectionString = "";
             //Вариант для Sqlite
-            connectionString = configuration.GetConnectionString("SqliteConnection");
+            //connectionString = configuration.GetConnectionString("SqliteConnection");
 
             //Вариант для локального SQL Server
             connectionString = configuration.GetConnectionString("SQLConnection");
 
-            //Вариант для удаленного SQL Server
-            //Считываем пароль и имя пользователя из secrets.json
+            ////Вариант для удаленного SQL Server
+            ////Считываем пароль и имя пользователя из secrets.json
             //string secretPass = configuration["Database:password"];
             //string secretUser = configuration["Database:login"];
             //SqlConnectionStringBuilder sqlConnectionStringBuilder = new(configuration.GetConnectionString("RemoteSQLConnection"))
