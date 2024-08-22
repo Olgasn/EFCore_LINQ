@@ -16,28 +16,33 @@ namespace EFCore_LINQ.Data
         {
             ConfigurationBuilder builder = new();
 
-            // установка пути к текущему каталогу
+            ///Установка пути к текущему каталогу
             builder.SetBasePath(Directory.GetCurrentDirectory());
             // получаем конфигурацию из файла appsettings.json
             builder.AddJsonFile("appsettings.json");
             // создаем конфигурацию
             IConfigurationRoot configuration = builder.AddUserSecrets<Program>().Build();
 
-            // получаем строку подключения
-
+            /// Получаем строку подключения
+            string connectionString = "";
             //Вариант для Sqlite
-            //string connectionString = config.GetConnectionString("SqliteConnection");
+            connectionString = configuration.GetConnectionString("SqliteConnection");
 
-            //Вариант для SQL Server
-            //Считываем пароль из secrets.json
-            string secretKey = configuration["Database:password"];
-            SqlConnectionStringBuilder sqlConnectionStringBuilder = new(configuration.GetConnectionString("SQLConnection"))
-            {
-                Password = secretKey
-            };
-            string connectionString = sqlConnectionStringBuilder.ConnectionString;
+            //Вариант для локального SQL Server
+            connectionString = configuration.GetConnectionString("SQLConnection");
 
+            //Вариант для удаленного SQL Server
+            //Считываем пароль и имя пользователя из secrets.json
+            //string secretPass = configuration["Database:password"];
+            //string secretUser = configuration["Database:login"];
+            //SqlConnectionStringBuilder sqlConnectionStringBuilder = new(configuration.GetConnectionString("RemoteSQLConnection"))
+            //{
+            //    Password = secretPass,
+            //    UserID= secretUser
+            //};
+            //connectionString = sqlConnectionStringBuilder.ConnectionString;
 
+            /// Задание опций подключения
             _ = optionsBuilder
                 .UseSqlServer(connectionString)
                 //.UseSqlite(connectionString)

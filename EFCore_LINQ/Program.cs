@@ -11,10 +11,9 @@ namespace EFCore_LINQ
     {
         public static void Main()
         {
-
-
             using FuelContext db = new();
             DbInitializer.Initialize(db);
+
             //Выполняем разные методы, содержащие операции выборки и изменения данных
             Console.WriteLine("====== Будет выполнена выборка данных (нажмите любую клавишу) ========");
             Console.ReadKey();

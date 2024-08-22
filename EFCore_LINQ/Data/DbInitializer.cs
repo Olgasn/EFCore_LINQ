@@ -11,10 +11,10 @@ namespace EFCore_LINQ.Data
             db.Database.EnsureCreated();
 
             // Проверка занесены ли виды топлива
-            if (db.Fuels.Any())
-            {
-                return;   // База данных инициализирована
-            }
+            //if (db.Fuels.Any())
+            //{
+            //    return;   // База данных инициализирована
+            //}
 
             int tanks_number = 35;
             int fuels_number = 35;
