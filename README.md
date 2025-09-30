@@ -3,5 +3,5 @@
 Демонстрируется выполнение операций выборки, вставки, обновления и удаления информации в таблицах базы данных.
 Использован Entity Framework Core 8.0
 
-Status: 
+Статус: 
 [![build](https://github.com/Olgasn/EFCore_LINQ/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Olgasn/EFCore_LINQ/actions/workflows/dotnet.yml)
