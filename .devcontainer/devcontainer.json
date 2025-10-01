@@ -16,8 +16,13 @@
   "containerEnv": {
     "ACCEPT_EULA": "Y",
     "MSSQL_PID": "Developer"
-    // MSSQL_SA_PASSWORD автоматически подставляется из секрета Codespaces
   },
   "postCreateCommand": "bash /usr/local/bin/init-db.sh",
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "portsAttributes": {
+    "1433": {
+      "label": "SQL Server",
+      "onAutoForward": "notify"
+    }
+  }
 }
