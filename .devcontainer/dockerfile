@@ -1,0 +1,21 @@
+# Базовый образ с Ubuntu и нужными инструментами
+FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu
+
+# Установка зависимостей
+RUN apt-get update && apt-get install -y curl apt-transport-https gnupg2
+
+# Добавление репозитория Microsoft SQL Server
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server.list
+
+# Установка MS SQL Server Developer Edition
+RUN apt-get update && apt-get install -y mssql-server
+
+# Настройка SA пароля и подтверждение лицензии
+RUN /opt/mssql/bin/mssql-conf setup accept-eula
+
+# Прослушивание порта SQL Server
+EXPOSE 1433
+
+# Запуск SQL Server при старте контейнера
+CMD /opt/mssql/bin/sqlservr

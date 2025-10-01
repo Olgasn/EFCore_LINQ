@@ -1,0 +1,20 @@
+{
+  "name": "Codespace � MS SQL Server",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "extensions": [
+    "ms-mssql.mssql",
+    "ms-vscode.cpptools"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "appPort": [1433],
+  "postCreateCommand": "echo '����� Codespaces � MS SQL Server ������'",
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "ACCEPT_EULA": "Y",
+    "SA_PASSWORD": "StrongPassword123!"
+  }
+}
