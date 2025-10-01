@@ -4,12 +4,7 @@
     "service": "app",
     "workspaceFolder": "/workspace",
     "containerEnv": {
-        "MSSQL_SA_PASSWORD": "${localEnv:MSSQL_SA_PASSWORD}"
+        "MSSQL_SA_PASSWORD": "${containerEnv.MSSQL_SA_PASSWORD}"
     },
-    "extensions": [
-        "ms-dotnettools.csharp",
-        "ms-azuretools.vscode-docker",
-        "ms-mssql.mssql"
-    ],
-    "postCreateCommand": "bash .devcontainer/wait-for-mssql.sh && /opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P \"$MSSQL_SA_PASSWORD\" -i .devcontainer/mssql/setup.sql"
+	"postCreateCommand": "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${containerEnv.MSSQL_SA_PASSWORD}\" -i .devcontainer/mssql/setup.sql"
 }

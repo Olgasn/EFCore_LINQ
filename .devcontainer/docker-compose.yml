@@ -2,28 +2,19 @@ version: '3.8'
 
 services:
   app:
-    build:
+    build: 
       context: .
       dockerfile: Dockerfile
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-      MSSQL_PID: "Developer"
-    depends_on:
-      - mssql
-    volumes:
-      - ..:/workspace:cached
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=Developer
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-      MSSQL_PID: "Developer"
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=Developer
     ports:
       - "1433:1433"
-    volumes:
-      - mssql-data:/var/opt/mssql
-
-volumes:
-  mssql-data:
