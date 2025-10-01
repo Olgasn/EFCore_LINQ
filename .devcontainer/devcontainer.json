@@ -1,5 +1,5 @@
 {
-  "name": "Codespace � MS SQL Server",
+  "name": "Codespace MS SQL Server",
   "build": {
     "dockerfile": "Dockerfile"
   },
@@ -11,7 +11,7 @@
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "appPort": [1433],
-  "postCreateCommand": "echo '����� Codespaces � MS SQL Server ������'",
+  "postCreateCommand": "echo 'Codespaces MS SQL Server'",
   "remoteUser": "vscode",
   "remoteEnv": {
     "ACCEPT_EULA": "Y",
