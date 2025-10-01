@@ -5,5 +5,6 @@
     "workspaceFolder": "/workspace",
     "containerEnv": {
         "MSSQL_SA_PASSWORD": "${containerEnv.MSSQL_SA_PASSWORD}"
-    }
+    },
+	"postCreateCommand": "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${containerEnv.MSSQL_SA_PASSWORD}\" -i .devcontainer/mssql/setup.sql"
 }
