@@ -1,10 +1,30 @@
 {
-    "name": "SQL Server Dev Container",
-    "dockerComposeFile": "docker-compose.yml",
-    "service": "app",
-    "workspaceFolder": "/workspace",
-    "containerEnv": {
-        "MSSQL_SA_PASSWORD": "${containerEnv.MSSQL_SA_PASSWORD}"
-    },
-	"postCreateCommand": "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${containerEnv.MSSQL_SA_PASSWORD}\" -i .devcontainer/mssql/setup.sql"
+  "name": "SQL Server Development",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  // Установка расширений VS Code в контейнер
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-mssql.mssql"
+      ]
+    }
+  },
+  // Переменные окружения для автоматической настройки SQL Server
+  "containerEnv": {
+    "ACCEPT_EULA": "Y",
+    "MSSQL_SA_PASSWORD": "${containerEnv:MSSQL_SA_PASSWORD}",
+    "MSSQL_PID": "Developer"
+  },
+  // Эта команда выполняется после сборки контейнера
+  "postCreateCommand": "/opt/mssql/bin/mssql-conf setup accept-eula && /opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MSSQL_SA_PASSWORD}\" -i /workspaces/${localWorkspaceFolderBasename}/.devcontainer/setup-database.sql",
+  // Команда по умолчанию для запуска SQL Server при старте контейнера
+  "postStartCommand": "/opt/mssql/bin/sqlservr"
 }
