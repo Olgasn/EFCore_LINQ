@@ -1,1 +1,1 @@
--- Создаем базу данных с именем toplivoefCREATE DATABASE toplivoef;GO-- Переключаем контекст на новую базу данных (опционально, для последующих команд)-- USE toplivoef;-- GO-- Здесь вы можете добавить команды для создания таблиц, схем и т.д.
+IF NOT EXISTS(SELECT name FROM sys.databases WHERE name = 'toplivoef')BEGIN    CREATE DATABASE toplivoef;    PRINT 'Database toplivoef created successfully.';ENDELSEBEGIN    PRINT 'Database toplivoef already exists.';ENDGO

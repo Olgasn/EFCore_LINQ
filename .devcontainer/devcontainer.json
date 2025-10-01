@@ -1,15 +1,11 @@
 {
-  "name": "SQL Server Development",
+  "name": "SQL Server Dev",
   "build": {
     "dockerfile": "Dockerfile"
-  },
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
   },
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  // Установка расширений VS Code в контейнер
   "customizations": {
     "vscode": {
       "extensions": [
@@ -17,14 +13,11 @@
       ]
     }
   },
-  // Переменные окружения для автоматической настройки SQL Server
   "containerEnv": {
     "ACCEPT_EULA": "Y",
-    "MSSQL_SA_PASSWORD": "${containerEnv:MSSQL_SA_PASSWORD}",
     "MSSQL_PID": "Developer"
+    // MSSQL_SA_PASSWORD автоматически подставляется из секрета Codespaces
   },
-  // Эта команда выполняется после сборки контейнера
-  "postCreateCommand": "/opt/mssql/bin/mssql-conf setup accept-eula && /opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MSSQL_SA_PASSWORD}\" -i /workspaces/${localWorkspaceFolderBasename}/.devcontainer/setup-database.sql",
-  // Команда по умолчанию для запуска SQL Server при старте контейнера
-  "postStartCommand": "/opt/mssql/bin/sqlservr"
+  "postCreateCommand": "bash /usr/local/bin/init-db.sh",
+  "remoteUser": "vscode"
 }
