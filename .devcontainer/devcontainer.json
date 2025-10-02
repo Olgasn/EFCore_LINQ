@@ -1,28 +1,17 @@
 {
-  "name": "SQL Server Dev",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
-  },
+  "name": "SQL Server Dev Environment",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-mssql.mssql"
+        "ms-mssql.mssql",
+        "ms-dotnettools.csharp"
       ]
     }
   },
-  "containerEnv": {
-    "ACCEPT_EULA": "Y",
-    "MSSQL_PID": "Developer"
-  },
-  "postCreateCommand": "bash /usr/local/bin/init-db.sh",
-  "remoteUser": "vscode",
-  "portsAttributes": {
-    "1433": {
-      "label": "SQL Server",
-      "onAutoForward": "notify"
-    }
-  }
+  "forwardPorts": [ 1433 ],
+  "postCreateCommand": "echo 'SQL Server container is starting... Use `sqlcmd` after a few seconds.'",
+  "remoteUser": "vscode"
 }

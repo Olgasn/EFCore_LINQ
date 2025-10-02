@@ -1,1 +1,0 @@
-IF NOT EXISTS(SELECT name FROM sys.databases WHERE name = 'toplivoef')BEGIN    CREATE DATABASE toplivoef;    PRINT 'Database toplivoef created successfully.';ENDELSEBEGIN    PRINT 'Database toplivoef already exists.';ENDGO
