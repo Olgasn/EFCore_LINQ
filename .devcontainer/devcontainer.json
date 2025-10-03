@@ -1,17 +1,22 @@
 {
-  "name": "SQL Server Dev Environment",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspace",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-mssql.mssql",
-        "ms-dotnettools.csharp"
-      ]
-    }
-  },
-  "forwardPorts": [ 1433 ],
-  "postCreateCommand": "echo 'SQL Server container is starting... Use `sqlcmd` after a few seconds.'",
-  "remoteUser": "vscode"
+    "name": "SQL Server Development",
+    "image": "mcr.microsoft.com/devcontainers/dotnet:0-8.0",
+    "features": {
+        "ghcr.io/devcontainers/features/mssql:1": {
+            "version": "2019-latest"
+        }
+    },
+    "settings": {
+        "mssql.connections": [
+            {
+                "server": "localhost",
+                "database": "master",
+                "authenticationType": "SqlLogin",
+                "user": "sa",
+                "password": "P@ssw0rd123!"
+            }
+        ]
+    },
+    "forwardPorts": [1433],
+    "postCreateCommand": "sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'P@ssw0rd123!' -d master -Q 'CREATE DATABASE fuelstation;'"
 }
