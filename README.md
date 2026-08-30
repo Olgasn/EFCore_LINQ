@@ -19,6 +19,15 @@
 dotnet user-secrets set "ConnectionStrings:SQLConnection" "Server=...;Database=...;User Id=...;Password=...;Encrypt=True;"
 ```
 
+Команда сохраняет строку подключения в локальном хранилище секретов .NET,
+связанном с идентификатором проекта `UserSecretsId` в файле `.csproj`. Секрет
+не записывается в `appsettings.json` и не попадает в репозиторий. При запуске
+приложение получает это значение через
+`configuration.GetConnectionString("SQLConnection")`, поскольку в
+`FuelContext.cs` подключено `AddUserSecrets<Program>()`. Многоточия в примере
+необходимо заменить фактическими параметрами подключения. Команда предназначена
+для локальной разработки и не создает секрет в GitHub.
+
 В GitHub секрет создается в разделе `Settings → Secrets and variables →
 Actions → New repository secret`. Рекомендуется сохранить строку подключения
 под именем `REMOTE_SQL_CONNECTION` либо хранить логин и пароль в отдельных
