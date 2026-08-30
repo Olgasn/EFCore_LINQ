@@ -10,11 +10,6 @@ namespace EFCore_LINQ.Models
         public string FuelType { get; set; }
         //Плотность вида топлива
         public float FuelDensity { get; set; }
-        public ICollection<Operation> Operations { get; set; }
-        public Fuel()
-        {
-            Operations = new List<Operation>();
-
-        }
+        public ICollection<Operation> Operations { get; set; } = new List<Operation>();
     }
 }

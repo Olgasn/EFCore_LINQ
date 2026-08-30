@@ -1,85 +1,97 @@
-﻿using EFCore_LINQ.Models;
+using EFCore_LINQ.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
-//Класс для инициализации базы данных путем заполнения ее таблиц тестовым набором записей
+// Класс для инициализации базы данных тестовым набором записей.
 namespace EFCore_LINQ.Data
 {
     public static class DbInitializer
     {
+        private const int TanksCount = 35;
+        private const int FuelsCount = 35;
+        private const int OperationsCount = 3000;
+
         public static void Initialize(FuelContext db)
         {
             db.Database.EnsureCreated();
 
-            // Проверка занесены ли виды топлива
             if (db.Fuels.Any())
             {
                 Console.WriteLine("====== База данных уже инициализирована ========");
-                return;   
+                return;
             }
 
-            int tanks_number = 35;
-            int fuels_number = 35;
-            int operations_number = 3000;
-            string tankType;
-            string tankMaterial;
-            float tankWeight;
-            float tankVolume;
-            string fuelType;
-            float fuelDensity;
+            var random = new Random(1);
+            var tanks = CreateTanks(random);
+            var fuels = CreateFuels(random);
+            var operations = CreateOperations(random, tanks, fuels);
 
-            Random randObj = new(1);
-
-            //Заполнение таблицы емкостей
-            string[] tank_voc = ["Цистерна_", "Ведро_", "Бак_", "Фляга_", "Цистерна_"];//словарь названий емкостей
-            string[] material_voc = ["Сталь", "Платина", "Алюминий", "ПЭТ", "Чугун", "Алюминий", "Сталь"];//словарь названий видов топлива
-            int count_tank_voc = tank_voc.GetLength(0);
-            int count_material_voc = material_voc.GetLength(0);
-            for (int tankID = 1; tankID <= tanks_number; tankID++)
-            {
-                tankType = tank_voc[randObj.Next(count_tank_voc)] + tankID.ToString();
-                tankMaterial = material_voc[randObj.Next(count_material_voc)];
-                tankWeight = 500 * (float)randObj.NextDouble();
-                tankVolume = 200 * (float)randObj.NextDouble();
-                db.Tanks.Add(new Tank { TankType = tankType, TankWeight = tankWeight, TankVolume = tankVolume, TankMaterial = tankMaterial });
-            }
-            //сохранение изменений в базу данных, связанную с объектом контекста
+            db.Tanks.AddRange(tanks);
+            db.Fuels.AddRange(fuels);
+            db.Operations.AddRange(operations);
             db.SaveChanges();
 
-            //Заполнение таблицы видов топлива
-            string[] fuel_voc = ["Нефть_", "Бензин_", "Керосин_", "Мазут_", "Спирт_"];
-            int count_fuel_voc = fuel_voc.GetLength(0);
-            for (int fuelID = 1; fuelID <= fuels_number; fuelID++)
-            {
-                fuelType = fuel_voc[randObj.Next(count_fuel_voc)] + fuelID.ToString();
-                fuelDensity = 2 * (float)randObj.NextDouble();
-                db.Fuels.Add(new Fuel { FuelType = fuelType, FuelDensity = fuelDensity });
-            }
-            //сохранение изменений в базу данных, связанную с объектом контекста
-            db.SaveChanges();
-
-            //Заполнение таблицы операций
-            int tankIDmin = db.Tanks.FirstOrDefault().TankID;
-            int fuelIDmin = db.Fuels.FirstOrDefault().FuelID;
-            for (int operationID = 1; operationID <= operations_number; operationID++)
-            {
-                int tankID = randObj.Next(tankIDmin, tankIDmin + tanks_number - 1);
-                int fuelID = randObj.Next(fuelIDmin, fuelIDmin + fuels_number - 1);
-                int inc_exp = randObj.Next(200) - 100;
-                DateTime today = DateTime.Now.Date;
-                DateTime operationdate = today.AddDays(-operationID);
-                db.Operations.Add(new Operation { TankID = tankID, FuelID = fuelID, Inc_Exp = inc_exp, Date = operationdate });
-            }
-            //сохранение изменений в базу данных, связанную с объектом контекста
-            db.SaveChanges();
-
-
-        Console.WriteLine("====== База данных инициализирована ========");
-
+            Console.WriteLine("====== База данных инициализирована ========");
         }
 
+        private static List<Tank> CreateTanks(Random random)
+        {
+            string[] tankPrefixes = ["Цистерна_", "Ведро_", "Бак_", "Фляга_", "Цистерна_"];
+            string[] materials = ["Сталь", "Платина", "Алюминий", "ПЭТ", "Чугун", "Алюминий", "Сталь"];
+            var tanks = new List<Tank>(TanksCount);
+
+            for (var number = 1; number <= TanksCount; number++)
+            {
+                tanks.Add(new Tank
+                {
+                    TankType = tankPrefixes[random.Next(tankPrefixes.Length)] + number,
+                    TankMaterial = materials[random.Next(materials.Length)],
+                    TankWeight = 500 * (float)random.NextDouble(),
+                    TankVolume = 200 * (float)random.NextDouble()
+                });
+            }
+
+            return tanks;
+        }
+
+        private static List<Fuel> CreateFuels(Random random)
+        {
+            string[] fuelPrefixes = ["Нефть_", "Бензин_", "Керосин_", "Мазут_", "Спирт_"];
+            var fuels = new List<Fuel>(FuelsCount);
+
+            for (var number = 1; number <= FuelsCount; number++)
+            {
+                fuels.Add(new Fuel
+                {
+                    FuelType = fuelPrefixes[random.Next(fuelPrefixes.Length)] + number,
+                    FuelDensity = 2 * (float)random.NextDouble()
+                });
+            }
+
+            return fuels;
+        }
+
+        private static List<Operation> CreateOperations(
+            Random random,
+            IReadOnlyList<Tank> tanks,
+            IReadOnlyList<Fuel> fuels)
+        {
+            var today = DateTime.Today;
+            var operations = new List<Operation>(OperationsCount);
+
+            for (var number = 1; number <= OperationsCount; number++)
+            {
+                operations.Add(new Operation
+                {
+                    Tank = tanks[random.Next(tanks.Count)],
+                    Fuel = fuels[random.Next(fuels.Count)],
+                    Inc_Exp = random.Next(200) - 100,
+                    Date = today.AddDays(-number)
+                });
+            }
+
+            return operations;
+        }
     }
-
 }
-
-

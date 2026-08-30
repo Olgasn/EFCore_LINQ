@@ -60,12 +60,18 @@ CREATE TABLE dbo.Operations (
 );
 GO
 
--- Добавление связей между таблицами
+-- Добавление связей между таблицами и индекесов для ускорения выборки
 ALTER TABLE dbo.Operations WITH CHECK ADD CONSTRAINT FK_Operations_Fuels FOREIGN KEY(FuelID)
 REFERENCES dbo.Fuels (FuelID) ON DELETE CASCADE;
 GO
 ALTER TABLE dbo.Operations WITH CHECK ADD CONSTRAINT FK_Operations_Tanks FOREIGN KEY(TankID)
 REFERENCES dbo.Tanks (TankID) ON DELETE CASCADE;
+GO
+
+CREATE INDEX IX_Operations_Date_FuelID ON dbo.Operations ([Date], FuelID);
+CREATE INDEX IX_Operations_TankID_FuelID ON dbo.Operations (TankID, FuelID);
+CREATE INDEX IX_Tanks_TankType ON dbo.Tanks (TankType);
+CREATE INDEX IX_Fuels_FuelType ON dbo.Fuels (FuelType);
 GO
 
 -- =================================================================

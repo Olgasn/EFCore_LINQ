@@ -1,6 +1,6 @@
 ﻿using EFCore_LINQ.Models;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
@@ -9,27 +9,32 @@ namespace EFCore_LINQ.Data
     public class FuelContext : DbContext
     {
 
-        public DbSet<Fuel> Fuels { get; set; }
-        public DbSet<Operation> Operations { get; set; }
-        public DbSet<Tank> Tanks { get; set; }
+        public DbSet<Fuel> Fuels => Set<Fuel>();
+        public DbSet<Operation> Operations => Set<Operation>();
+        public DbSet<Tank> Tanks => Set<Tank>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            ConfigurationBuilder builder = new();
+            if (optionsBuilder.IsConfigured)
+            {
+                return;
+            }
+
+            var builder = new ConfigurationBuilder();
 
             ///Установка пути к текущему каталогу
             builder.SetBasePath(Directory.GetCurrentDirectory());
             // получаем конфигурацию из файла appsettings.json
             builder.AddJsonFile("appsettings.json");
             // создаем конфигурацию
-            IConfigurationRoot configuration = builder.AddUserSecrets<Program>().Build();
+            var configuration = builder.AddUserSecrets<Program>(optional: true).Build();
 
             /// Получаем строку подключения
-            string connectionString = "";
+            string connectionString = configuration.GetConnectionString("SQLConnection")
+                ?? throw new InvalidOperationException("Не найдена строка подключения 'SQLConnection'.");
             //Вариант для Sqlite
             //connectionString = configuration.GetConnectionString("SqliteConnection");
 
             //Вариант для локального SQL Server
-            connectionString = configuration.GetConnectionString("SQLConnection");
 
             ////Вариант для удаленного SQL Server
             ////Считываем пароль и имя пользователя из secrets.json
@@ -43,13 +48,19 @@ namespace EFCore_LINQ.Data
             //connectionString = sqlConnectionStringBuilder.ConnectionString;
 
             /// Задание опций подключения
-            _ = optionsBuilder
-                .UseSqlServer(connectionString)
-                //.UseSqlite(connectionString)
-                .Options;
+            optionsBuilder.UseSqlServer(connectionString);
+            // optionsBuilder.UseSqlite(connectionString);
             optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message));
 
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Operation>().HasIndex(o => new { o.Date, o.FuelID });
+            modelBuilder.Entity<Operation>().HasIndex(o => new { o.TankID, o.FuelID });
+            modelBuilder.Entity<Tank>().HasIndex(t => t.TankType);
+            modelBuilder.Entity<Fuel>().HasIndex(f => f.FuelType);
         }
     }
 }

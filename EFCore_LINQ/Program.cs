@@ -1,224 +1,192 @@
-﻿using EFCore_LINQ.Data;
+using EFCore_LINQ.Data;
 using EFCore_LINQ.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EFCore_LINQ
 {
     public class Program
     {
+        private const int RecordsToDisplay = 5;
+
         public static void Main()
         {
-            using FuelContext db = new();
+            using var db = new FuelContext();
             DbInitializer.Initialize(db);
 
-            //Выполняем разные методы, содержащие операции выборки и изменения данных
-            Console.WriteLine("====== Будет выполнена выборка данных (нажмите любую клавишу) ========");
-            Console.ReadKey();
-            Select(db, 5);
-            Console.WriteLine("====== Будет выполнена вставка данных (нажмите любую клавишу) ========");
-            Console.ReadKey();
+            Pause("====== Будет выполнена выборка данных ========");
+            Select(db, RecordsToDisplay);
+
+            Pause("====== Будет выполнена вставка данных ========");
             Insert(db);
             Console.WriteLine("====== Выборка после вставки ========");
-            Select(db, 5);
-            Console.WriteLine("====== Будет выполнено обновление данных (нажмите любую клавишу) ========");
-            Console.ReadKey();
+            Select(db, RecordsToDisplay);
+
+            Pause("====== Будет выполнено обновление данных ========");
             Update(db);
             Console.WriteLine("====== Выборка после обновления ========");
-            Select(db, 5);
-            Console.WriteLine("====== Будет выполнено удаление данных (нажмите любую клавишу) ========");
-            Console.ReadKey();
+            Select(db, RecordsToDisplay);
+
+            Pause("====== Будет выполнено удаление данных ========");
             Delete(db);
             Console.WriteLine("====== Выборка после удаления ========");
-            Select(db, 5);
+            Select(db, RecordsToDisplay);
         }
 
-        static void Print(string sqltext, IEnumerable items)
-        // Вывод на консоль
+        private static void Pause(string message)
         {
-            Console.WriteLine(sqltext);
+            Console.WriteLine($"{message} (нажмите любую клавишу)");
+            Console.ReadKey(intercept: true);
+        }
+
+        private static void Print<T>(string comment, IEnumerable<T> items)
+        {
+            Console.WriteLine(comment);
             Console.WriteLine("Записи: ");
+
             foreach (var item in items)
             {
-                Console.WriteLine(item.ToString());
+                Console.WriteLine(item);
             }
+
             Console.WriteLine();
-            Console.ReadKey();
+            Console.ReadKey(intercept: true);
         }
 
-        static void Insert(FuelContext db)
+        private static void Insert(FuelContext db)
         {
-            // Создать новую емкость
-            Tank tank = new()
+            var tank = new Tank
             {
                 TankType = "Бочка",
                 TankMaterial = "Дерево",
                 TankVolume = 30,
                 TankWeight = 100
             };
-            // Создать новый вид топлива
-            Fuel fuel = new()
+            var fuel = new Fuel
             {
                 FuelType = "Нитроглицерин",
                 FuelDensity = 3
             };
-
-            // Добавить в DbSet
-            db.Tanks.Add(tank);
-            db.Fuels.Add(fuel);
-            // Сохранить изменения в базе данных
-            db.SaveChanges();
-
-            // Создать новую операцию
-            Operation operation = new()
+            var operation = new Operation
             {
-                TankID = tank.TankID,
-                FuelID = fuel.FuelID,
+                Tank = tank,
+                Fuel = fuel,
                 Inc_Exp = 1000,
                 Date = DateTime.Now
             };
 
-            // Добавить в DbSet
+            // EF Core сохранит связанные сущности в правильном порядке.
             db.Operations.Add(operation);
-            // Сохранить изменения в базе данных
             db.SaveChanges();
-
-        }
-        static void Select(FuelContext db, int recordsNumber)
-        {
-
-            // Определение LINQ запроса 1
-            var queryLINQ1 = from f in db.Operations
-                             join t in db.Fuels
-                             on f.FuelID equals t.FuelID
-                             where (f.Inc_Exp > 0 && f.Date.Year == DateTime.Now.Year)
-                             orderby f.FuelID descending
-                             select new
-                             {
-                                 Код_операции = f.OperationID,
-                                 Название_топлива = t.FuelType,
-                                 Приход_Расход = f.Inc_Exp,
-                                 Месяц = f.Date.Month
-                             };
-
-            //то же, используя методы расширений
-            //var queryLINQ1 = db.Operations.Where(f => (f.Inc_Exp > 0 && f.Date.Value.Year == DateTime.Now.Year))
-            //.OrderBy(f => f.FuelID)
-            //.Join(db.Fuels, f => f.FuelID, t => t.FuelID, (f, t) => new { f.OperationID, t.FuelType, f.Inc_Exp, f.Date.Value.Month });
-
-            string comment = "1. Результат выполнения запроса на выборку отсортированных записей из двух таблиц, удовлетворяющих заданному условию : \r\n";
-            //для наглядности выводим не более recordsNumber записей
-            Print(comment, queryLINQ1.Take(recordsNumber).ToList());
-
-            // Определение LINQ запроса 2 
-            var queryLINQ2 = from o in db.Operations
-                             where (o.Inc_Exp > 0 && o.Date.Year == DateTime.Now.Year)
-                             group o.Inc_Exp by o.FuelID into gr
-                             select new
-                             {
-                                 Код_топлива = gr.Key,
-                                 Количество_топлива = gr.Sum()
-                             };
-            //то же, используя методы расширений:
-            //var queryLINQ2 = db.Operations.Where(o => ((o.Inc_Exp > (Single?)0) && (o.Date.Value.Year == DateTime.Now.Year)))
-            //    .GroupBy(o => o.FuelID, o => o.Inc_Exp)
-            //    .Select(gr => new
-            //    {
-            //        Код_топлива = gr.Key,
-            //        Количества_топлива = gr.Sum()
-            //    }
-            //     );
-
-            comment = "2. Результат выполнения запроса на выборку сгруппированных записей из одной таблицы, удовлетворяющих заданному условию, с выполнением групповой операции суммирования : \r\n";
-            //для наглядности выводим не более recordsNumber записей
-            Print(comment, queryLINQ2.Take(recordsNumber).ToList());
-
-            // Определение LINQ запроса 3
-            var queryLINQ3 = from t in db.Tanks
-                             orderby t.TankID descending
-                             select new
-                             {
-                                 Название_Емкости = t.TankType,
-                                 Материал_Емкости = t.TankMaterial,
-                                 Объем_Емкости = t.TankVolume,
-                                 Вес = t.TankWeight
-                             };
-
-            comment = "3. Результат выполнения запроса на выборку записей из одной таблицы с выводом определенных полей: \r\n";
-            //для наглядности выводим не более recordsNumber записей
-            Print(comment, queryLINQ3.Take(recordsNumber).ToList());
         }
 
-        static void Delete(FuelContext db)
+        private static void Select(FuelContext db, int recordsNumber)
         {
-            //подлежащие удалению записи в таблице Tanks
-            string nametank = "Бочка1";
-            IQueryable<Tank> tank = db.Tanks.Where(c => c.TankType == nametank);
+            var yearStart = new DateTime(DateTime.Today.Year, 1, 1);
+            var nextYearStart = yearStart.AddYears(1);
 
-            //подлежащие удалению записи в таблице Fuels
-            string namefuel = "Нитроглицерин1";
-            IQueryable<Fuel> fuel = db.Fuels
-                .Where(c => c.FuelType == namefuel);
+            // Запрос 1: выборка отсортированных записей из двух таблиц.
+            var operationsQuery = from operation in db.Operations.AsNoTracking()
+                                  join fuel in db.Fuels.AsNoTracking()
+                                      on operation.FuelID equals fuel.FuelID
+                                  where operation.Inc_Exp > 0
+                                      && operation.Date >= yearStart
+                                      && operation.Date < nextYearStart
+                                  orderby operation.FuelID descending
+                                  select new
+                                  {
+                                      Код_операции = operation.OperationID,
+                                      Название_топлива = fuel.FuelType,
+                                      Приход_Расход = operation.Inc_Exp,
+                                      Месяц = operation.Date.Month
+                                  };
 
-            //подлежащие удалению записи в связанной таблице Operations
-            IQueryable<Operation> someOperations = db.Operations
-                .Include("Tank")
-                .Include("Fuel")
-                .Where(o => ((o.Tank.TankType == nametank)) && (o.Fuel.FuelType == namefuel));
+            Print(
+                "1. Результат выборки отсортированных записей из двух таблиц:\r\n",
+                operationsQuery.Take(recordsNumber).ToList());
 
-            //Удаление нескольких записей в таблице Operations    
-            db.Operations.RemoveRange(someOperations);
-            // сохранить изменения в базе данных
-            db.SaveChanges();
+            // Запрос 2: группировка операций и суммирование количества топлива.
+            var fuelTotalsQuery = from operation in db.Operations.AsNoTracking()
+                                  where operation.Inc_Exp > 0
+                                      && operation.Date >= yearStart
+                                      && operation.Date < nextYearStart
+                                  group operation.Inc_Exp by operation.FuelID into fuelGroup
+                                  select new
+                                  {
+                                      Код_топлива = fuelGroup.Key,
+                                      Количество_топлива = fuelGroup.Sum()
+                                  };
 
-            //Удаление нескольких записей в таблице Tanks и в таблице Fuels
-            db.Tanks.RemoveRange(tank);
-            db.Fuels.RemoveRange(fuel);
+            Print(
+                "2. Результат группировки операций и суммирования:\r\n",
+                fuelTotalsQuery.Take(recordsNumber).ToList());
 
-            // сохранить изменения в базе данных
-            db.SaveChanges();
+            // Запрос 3: выборка отдельных полей из одной таблицы.
+            var tanksQuery = from tank in db.Tanks.AsNoTracking()
+                             orderby tank.TankID descending
+                             select new
+                             {
+                                 Название_Емкости = tank.TankType,
+                                 Материал_Емкости = tank.TankMaterial,
+                                 Объем_Емкости = tank.TankVolume,
+                                 Вес = tank.TankWeight
+                             };
 
+            Print(
+                "3. Результат выборки отдельных полей из таблицы емкостей:\r\n",
+                tanksQuery.Take(recordsNumber).ToList());
         }
-        static void Update(FuelContext db)
+
+        private static void Delete(FuelContext db)
         {
-            //подлежащие обновлению записи в таблице Tanks
-            string nametank = "Бочка";
-            Tank tank = db.Tanks.Where(c => c.TankType == nametank).FirstOrDefault();
-            //обновление
-            if (tank != null)
+            const string tankType = "Бочка1";
+            const string fuelType = "Нитроглицерин1";
+
+            using var transaction = db.Database.BeginTransaction();
+
+            // Удаление выполняется на стороне БД, без загрузки сущностей в память.
+            db.Operations
+                .Where(operation => operation.Tank.TankType == tankType
+                    && operation.Fuel.FuelType == fuelType)
+                .ExecuteDelete();
+            db.Tanks.Where(tank => tank.TankType == tankType).ExecuteDelete();
+            db.Fuels.Where(fuel => fuel.FuelType == fuelType).ExecuteDelete();
+
+            transaction.Commit();
+        }
+
+        private static void Update(FuelContext db)
+        {
+            const string tankType = "Бочка";
+            const string fuelType = "Нитроглицерин";
+
+            using var transaction = db.Database.BeginTransaction();
+
+            var tank = db.Tanks.FirstOrDefault(item => item.TankType == tankType);
+            if (tank is not null)
             {
                 tank.TankType = "Бочка1";
                 tank.TankMaterial = "Дерево1";
-            };
-
-            //подлежащие обновлению записи в таблице Fuels
-            string namefuel = "Нитроглицерин";
-            Fuel fuel = db.Fuels.Where(c => c.FuelType == namefuel).FirstOrDefault();
-            //обновление
-            if (fuel != null)
-            {
-                fuel.FuelType = "Нитроглицерин1";
-            };
-
-            //подлежащие обновлению записи в связанной таблице Operations
-            IQueryable<Operation> someOperations = db.Operations.Include("Tank").Include("Fuel")
-                .Where(o => ((o.Tank.TankType == nametank)) && (o.Fuel.FuelType == namefuel));
-            //обновление
-            if (someOperations != null)
-            {
-                foreach (Operation op in someOperations)
-                {
-                    op.Inc_Exp = 0;
-                };
             }
 
-            // сохранить изменения в базе данных
+            var fuel = db.Fuels.FirstOrDefault(item => item.FuelType == fuelType);
+            if (fuel is not null)
+            {
+                fuel.FuelType = "Нитроглицерин1";
+            }
+
+            if (tank is not null && fuel is not null)
+            {
+                db.Operations
+                    .Where(operation => operation.TankID == tank.TankID
+                        && operation.FuelID == fuel.FuelID)
+                    .ExecuteUpdate(update => update.SetProperty(operation => operation.Inc_Exp, 0f));
+            }
+
             db.SaveChanges();
-
+            transaction.Commit();
         }
-
-
     }
 }
