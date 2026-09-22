@@ -172,10 +172,7 @@ namespace EFCore_LINQ
             }
 
             var fuel = db.Fuels.FirstOrDefault(item => item.FuelType == fuelType);
-            if (fuel is not null)
-            {
-                fuel.FuelType = "Нитроглицерин1";
-            }
+            fuel?.FuelType = "Нитроглицерин1";
 
             if (tank is not null && fuel is not null)
             {

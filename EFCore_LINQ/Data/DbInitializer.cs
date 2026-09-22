@@ -74,8 +74,8 @@ namespace EFCore_LINQ.Data
 
         private static List<Operation> CreateOperations(
             Random random,
-            IReadOnlyList<Tank> tanks,
-            IReadOnlyList<Fuel> fuels)
+            List<Tank> tanks,
+            List<Fuel> fuels)
         {
             var today = DateTime.Today;
             var operations = new List<Operation>(OperationsCount);
