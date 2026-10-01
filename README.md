@@ -5,6 +5,10 @@ EFCore_LINQ - консольное приложение-демонстрацио
 Демонстрируется выполнение операций выборки, вставки, обновления и удаления информации в таблицах базы данных.
 Использован Entity Framework Core 10.0
 
+
+[![build](https://github.com/Olgasn/EFCore_LINQ/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Olgasn/EFCore_LINQ/actions/workflows/dotnet.yml)
+
+
 Статус: 
 [![build](https://github.com/Olgasn/EFCore_LINQ/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Olgasn/EFCore_LINQ/actions/workflows/dotnet.yml)
 
