@@ -21,16 +21,25 @@ namespace EFCore_LINQ.Data
 
             var builder = new ConfigurationBuilder();
 
-            ///Установка пути к текущему каталогу
-            builder.SetBasePath(Directory.GetCurrentDirectory());
+            /// Используем каталог сборки, где лежит appsettings.json.
+            /// Это работает и при запуске из корня репозитория, и из проекта.
+            builder.SetBasePath(AppContext.BaseDirectory);
             // получаем конфигурацию из файла appsettings.json
-            builder.AddJsonFile("appsettings.json");
+            builder.AddJsonFile("appsettings.json", optional: false);
             // создаем конфигурацию
             var configuration = builder.AddUserSecrets<Program>(optional: true).Build();
 
-            /// Получаем строку подключения
-            string connectionString = configuration.GetConnectionString("SQLConnection")
-                ?? throw new InvalidOperationException("Не найдена строка подключения 'SQLConnection'.");
+            /// Получаем строку подключения.
+            /// Для Windows используется LocalDB, для Linux/devcontainer — контейнер SQL Server.
+            string connectionString = OperatingSystem.IsWindows()
+                ? configuration.GetConnectionString("SQLConnection")
+                : configuration.GetConnectionString("SQLConnectionDevContainer") ?? configuration.GetConnectionString("SQLConnection");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("Не найдена строка подключения для SQL Server.");
+            }
+
             //Вариант для Sqlite
             //connectionString = configuration.GetConnectionString("SqliteConnection");
 
